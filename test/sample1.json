@@ -1,0 +1,70 @@
+{
+	"equipments": {
+		"equipment": [
+			{
+				"-key": "key1",
+				"maxsession": "3",
+				"mode": [
+					{
+						"admin": [
+							{
+								"in": "admin",
+								"out": "exit"
+							}
+						],
+						"config": [
+							{
+								"in": "configure terminal",
+								"out": "commit",
+								"post_out": "end"
+							}
+						]
+					}
+				],
+				"network": "Test",
+				"terminal": [
+					{
+						"length": "terminal lenthg 1",
+						"width": "terminal width 2"
+					}
+				]
+			},
+			{
+				"-key": "key2",
+				"maxsession": "3",
+				"mode": [
+					{
+						"admin": [
+							{
+								"in": "admin",
+								"out": "exit"
+							}
+						],
+						"config": [
+							{
+								"in": "configure terminal",
+								"out": "commit",
+								"post_out": "end"
+							}
+						],
+						"configprivate": [
+							{
+								"in": "configure terminal",
+								"out": "commit",
+								"post_in": "in",
+								"post_out": "end"
+							}
+						]
+					}
+				],
+				"network": "Test",
+				"terminal": [
+					{
+						"length": "terminal lenthg 1",
+						"width": "terminal width 2"
+					}
+				]
+			}
+		]
+	}
+}
