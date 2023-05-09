@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"

@@ -1,0 +1,11 @@
+{
+	"namelist": [
+		"name1",
+		"name2",
+		"name1in",
+		"name1end"
+	],
+	"test1": {
+		"id": "test1fine"
+	}
+}

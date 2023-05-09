@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -110,4 +111,71 @@ func TestPutRedis(t *testing.T) {
 	}
 
 	assert.Equal(t, expectedResponse, jsonData)
+}
+
+func TestPutRedisNoOrder(t *testing.T) {
+	router := gin.Default()
+	router.POST("/:tenant", PutRedis)
+	router.GET("/:tenant", GetRedis)
+
+	sourceFileName := "test/test1.json"
+	jsonFile, err := os.Open(sourceFileName)
+	if err != nil {
+		t.Fatalf("Failed to open %s: %v", sourceFileName, err)
+	}
+	defer jsonFile.Close()
+
+	content, err := io.ReadAll(jsonFile)
+	if err != nil {
+		t.Fatalf("Failed to read %s: %v", sourceFileName, err)
+	}
+
+	var jsonData map[string]interface{}
+	err = json.Unmarshal(content, &jsonData)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal input JSON: %v", err)
+	}
+
+	// Send the JSON input to the PUT endpoint
+	/* jsonDataBytes, err := json.Marshal(jsonData)
+	if err != nil {
+		t.Fatalf("Failed to marshal input JSON: %v", err)
+	}
+	*/
+	/* body := bytes.NewBuffer(jsonDataBytes)
+	req, _ := http.NewRequest("POST", "/tenant1", body)
+	resp := httptest.NewRecorder()
+	router.ServeHTTP(resp, req)
+
+	// Verify that the PUT request was successful
+	assert.Equal(t, 200, resp.Code) */
+
+	// Fetch the data from Redis using a GET request
+	req, _ := http.NewRequest("GET", "/tenant1", nil)
+	resp := httptest.NewRecorder()
+	router.ServeHTTP(resp, req)
+
+	// Verify that the GET request was successful
+	assert.Equal(t, 200, resp.Code)
+
+	// Verify that the fetched JSON matches the input JSON, regardless of array order
+	responseBytes := resp.Body.Bytes()
+
+	var responseMap map[string]interface{}
+	err = json.Unmarshal(responseBytes, &responseMap)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal response JSON: %v", err)
+	}
+
+	expectedNamelist := jsonData["namelist"].([]interface{})
+	actualNamelist := responseMap["namelist"].([]interface{})
+
+	fmt.Println("expectedNamelist:", expectedNamelist)
+	fmt.Println("actualNamelist:", actualNamelist)
+	assert.ElementsMatch(t, expectedNamelist, actualNamelist)
+
+	expectedTest1 := jsonData["test1"].(map[string]interface{})
+	actualTest1 := responseMap["test1"].(map[string]interface{})
+
+	assert.Equal(t, expectedTest1["id"], actualTest1["id"])
 }
