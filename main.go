@@ -2,18 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/nitishm/go-rejson/v4"
 )
-
-/* type Data struct {
-	Key   string      `json:"key"`
-	Value interface{} `json:"value"`
-} */
 
 var rh *rejson.Handler
 
@@ -75,63 +68,7 @@ func PutRedis(c *gin.Context) {
 	}
 	fmt.Println("JSON WRITE: ", jsonData)
 	c.JSON(200, gin.H{"status": "success"})
-	/*file, _, err := c.Request.FormFile("file")
-		if err != nil {
-			c.JSON(400, gin.H{"error": "file not found"})
-			return
-		}
 
-		content, err := ioutil.ReadAll(file)
-		if err != nil {
-			c.JSON(400, gin.H{"error": "error reading file"})
-			return
-		}
-
-		// Unmarshal the JSON bytes into a map[string]interface{}
-	 var jsonData map[string]interface{}
-		err = json.Unmarshal(content, &jsonData)
-		if err != nil {
-			c.JSON(400, gin.H{"error": "error decoding JSON"})
-			return
-		}
-
-		_, err = rh.JSONSet(tenant, ".", jsonData)
-		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
-			return
-		}
-		fmt.Println("JSON WRITE: ", jsonData)
-		c.JSON(200, gin.H{"status": "success"}) */
-}
-func PutRedis1(c *gin.Context) {
-	tenant := c.Param("tenant")
-	file, _, err := c.Request.FormFile("file")
-	if err != nil {
-		c.JSON(400, gin.H{"error": "file not found"})
-		return
-	}
-
-	content, err := ioutil.ReadAll(file)
-	if err != nil {
-		c.JSON(400, gin.H{"error": "error reading file"})
-		return
-	}
-
-	// Unmarshal the JSON bytes into a map[string]interface{}
-	var jsonData map[string]interface{}
-	err = json.Unmarshal(content, &jsonData)
-	if err != nil {
-		c.JSON(400, gin.H{"error": "error decoding JSON"})
-		return
-	}
-
-	_, err = rh.JSONSet(tenant, ".", jsonData)
-	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
-		return
-	}
-	fmt.Println("JSON WRITE: ", jsonData)
-	c.JSON(200, gin.H{"status": "success"})
 }
 
 func main() {
